@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive/hive.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:ssh_box/config/color_foncif.dart';
-import 'package:ssh_box/config/const_strign.dart';
+import 'package:ssh_box/config/check_params.dart';
 import 'package:ssh_box/config/size_adpat.dart';
 import 'package:ssh_box/model/cal_model.dart';
 import 'package:ssh_box/pages/add_host.dart';
@@ -52,10 +50,9 @@ class AddHostView extends ConsumerWidget {
 // TODO: implement build
     return Scaffold(
       backgroundColor: NeumorphicTheme.baseColor(context),
-
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-
+          getNetList();
         },
         child: Text(
           "click",
@@ -71,12 +68,14 @@ class AddHostView extends ConsumerWidget {
         statusCell(),
         Expanded(
           child: _serverInfo(),
+          flex: 2,
+        ),
+        cellHeight(10),
+        Expanded(
+          child: _authView(),
           flex: 1,
         ),
         cellHeight(30),
-        _testConsumer(),
-// Text(ref.watch(model).name),
-        Spacer(flex: 1)
       ],
     );
   }
@@ -89,7 +88,7 @@ class AddHostView extends ConsumerWidget {
           shape: NeumorphicShape.concave,
           color: Colors.grey,
           lightSource: LightSource.topRight),
-      margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+      margin: EdgeInsets.symmetric(vertical: pxW(10), horizontal: pxH(15)),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,29 +111,38 @@ class AddHostView extends ConsumerWidget {
 
   /// 认证信息 view
   _authView() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
-      decoration: BoxDecoration(
-        color: Colors.grey,
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: <Widget>[
-              _returnText("用户"),
-              Spacer(),
+    return Neumorphic(
+      style: const NeumorphicStyle(
+          depth: 20,
+          shape: NeumorphicShape.concave,
+          color: Colors.grey,
+          lightSource: LightSource.topRight),
+      margin: EdgeInsets.symmetric(vertical: pxW(10), horizontal: pxH(15)),
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Colors.grey,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: <Widget>[
+                _returnText("用户"),
+                Spacer(),
 // TextField()
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              _returnText("密码"),
-              Spacer(),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                _returnText("密码"),
+                Spacer(),
 // TextField()
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

@@ -13,5 +13,20 @@ checkIP(String ip) {
   } else {
     return false;
   }
+}
 
+/// 获取本地设备信息
+getNetList() async{
+  final socket = await RawDatagramSocket.bind(InternetAddress.anyIPv4, 0);
+  final data = 'Hello from Flutter'.codeUnits;
+  final broadcastAddress = InternetAddress('255.255.255.255');
+  socket.send(data, broadcastAddress, 8888);
+
+  socket.listen((event) {
+    final datagram = socket.receive();
+    if (datagram != null) {
+      final message = String.fromCharCodes(datagram.data);
+      print('Received message from ${datagram.address.address}: $message');
+    }
+  });
 }
